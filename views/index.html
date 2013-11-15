@@ -1,0 +1,129 @@
+<block content>
+  <div id="wrap" >
+    <h1> Overall Datasync Stats</h1>
+    <p>
+      <label>Node Version: </label>
+      <label id="nodever"></label>
+    </p> 
+
+    <p>
+      <label>Platform:</label>
+      <label id="platform"></label>     
+    </p>  
+    
+    <p>
+      <label>Processor:</label>
+      <label id="proc"></label>
+    </p>
+    
+    <p>
+      <label>Memory Usage:</label>
+      <label id="mem"></label>
+    </p>
+
+    <p>
+      <label>Current Directory</label>
+      <label id="dir"></label>
+    </p>
+    
+    <p>
+    </p>
+    <p>
+    </p>
+    
+
+    <p>
+      <label>Start Date: </label>  
+        <label id="startDate"></label>
+    </p>
+    
+    <p>
+      <label>Run Minutes:</label>
+      <label id="uptime"></label>
+    </p>
+
+    <p>
+      <label> Total Transactions:</label>  
+      <label id="total"></label>   
+    </p>
+        
+    <p>  
+      <label>Successful Transactions: </label>  
+      <label id="totalGood"></label> 
+     </p>   
+
+    <p>
+      <label>Errors: </label>
+      <label id="totalErrors"> </label> 
+    </p>    
+
+    <p>
+      <button id="refresh">Refresh</button>
+    </p>  
+  </div>    
+  </block content>    
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+
+      $.ajax({
+        type: "GET",
+        url: "/stats",
+        cache: false,
+        success: function (result) {
+           $(startDate).html(result.startDate);
+           $(total).html(result.totalTrans);
+           $(totalGood).html(result.totalSuccessfulTrans);
+           $(totalErrors).html(result.totalErrTrans);
+           $(nodever).html(result.nodeVer);
+           $(platform).html(result.platform);
+           $(proc).html(result.arch);
+           $(mem).html(result.mem);
+           $(uptime).html(result.uptime);
+           $(dir).html(result.dir);
+        },
+         error: function (request,error) {
+           alert(error);
+          }        
+    
+        }); 
+
+
+        $("#refresh").click(function () {
+        $.ajax({
+          type: "GET",
+          url: "/stats",
+          cache: false,
+          success: function (result) {
+           $(startDate).html(result.startDate);
+           $(total).html(result.totalTrans);
+           $(totalGood).html(result.totalSuccessfulTrans);
+           $(totalErrors).html(result.totalErrTrans);
+           $(nodever).html(result.nodeVer);
+           $(platform).html(result.platform);
+           $(proc).html(result.arch);
+           $(mem).html(result.mem);
+           $(uptime).html(result.uptime);
+          },
+           error: function (request,error) {
+             alert(error);
+            }        
+    
+        }); 
+            
+         });
+
+      });
+    </script>
+
+
+
+    <script type="text/javascript">
+      $( "refresh" ).click(function() {
+    alert('clicked');
+  });
+      </script>
+
+
+
+

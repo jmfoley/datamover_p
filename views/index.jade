@@ -1,0 +1,63 @@
+extends layout
+
+block content
+  div#wrap
+    h1 Overall Datasync Stats
+    p
+      label Start Date:    
+        label#startDate 
+    p
+      label Total Transactions:  
+        label#total   
+    p  
+      label Successful Transactions:  
+        label#totalGood   
+    p
+      label Errors:  
+        label#totalErrors   
+
+    p
+      button#refresh Refresh 
+
+    
+
+  script
+      $(document).ready(function() {
+      $.ajax({
+        type: "GET",
+        url: "/stats",
+        cache: false,
+        success: function (result) {
+          //alert(JSON.stringify(result));
+           $(startDate).html(result.startDate);
+           $(total).html(result.totalTrans);
+           $(totalGood).html(result.totalSuccessfulTrans);
+           $(totalErrors).html(result.totalErrTrans);
+        },
+         error: function (request,error) {
+           alert(error);
+          }        
+    
+        }); 
+        $("#refresh").click(function () {   
+        $.ajax({
+          type: "GET",
+          url: "/stats",
+          cache: false,
+          success: function (result) {
+            //alert(JSON.stringify(result));
+             $(startDate).html(result.startDate);
+             $(total).html(result.totalTrans);
+             $(totalGood).html(result.totalSuccessfulTrans);
+             $(totalErrors).html(result.totalErrTrans);
+          },
+           error: function (request,error) {
+             alert(error);
+            }        
+    
+        }); 
+            
+         });
+
+      });
+
