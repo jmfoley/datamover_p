@@ -100,8 +100,8 @@ function post_crashdata() {
 function post_kioskdata() {
   var self = this;
   totalTransReceived++;
+  console.log(self.post);
   kioskTableFilter.ProcessTrans(self.post, function (err, results) {
-    console.log(self.post.operatorid);
     if (err) {
       totalErrorTrans++;
       self.res.writeHead(200);
@@ -122,7 +122,7 @@ function post_slotdata() {
   var self = this;
   totalTransReceived++;
   slotTableFilter.ProcessTrans(self.post, function (err, results) {
-    console.log(self.post.operatorid);
+  console.log(self.post);
     if (err) {
       totalErrorTrans++;
       self.res.writeHead(200);
