@@ -13,6 +13,7 @@ function LogUnEx(clientData,errorText,callback) {
     
     var sql = '';
     var connection;
+    var errorMsg = errorText;
 
     dbConnect.GetDbConnection(10,function(err,results) {
 
@@ -30,8 +31,8 @@ function LogUnEx(clientData,errorText,callback) {
             if (err) {
                 connection.close();
                 sql = null;
-                console.log(errMsg);
-                callback(errMsg,null);
+                console.log(err);
+                callback(err,null);
         
             } else {
                 connection.close();
@@ -45,7 +46,7 @@ function LogUnEx(clientData,errorText,callback) {
 
         request.addParameter('oper', TYPES.Int,10);
         request.addParameter('loc', TYPES.VarChar,'DataSync');
-        request.addParameter('errText', TYPES.VarChar,errorText);
+        request.addParameter('errText', TYPES.VarChar,errorMsg);
         request.addParameter('date', TYPES.DateTime,new Date());
 
         connection.execSql(request);

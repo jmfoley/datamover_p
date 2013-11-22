@@ -21,7 +21,7 @@ function ProcessTrans(data,callback){
     
 
 
-    console.log(util.inspect(data)); 
+    //console.log(util.inspect(data)); 
 
     if(data.table === 'sl_alarms') {
       if( data.operation === 'routedrop') {
@@ -1122,6 +1122,10 @@ function ProcessTrans(data,callback){
 
       }
 
+    } else {  //unknown table, need to respond anyway so the client doesn't keep sending
+        data = null;
+        console.log('***In catch all*******');
+        callback(null,'OK');
     }
 }
  exports.ProcessTrans = ProcessTrans;

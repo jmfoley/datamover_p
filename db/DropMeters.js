@@ -85,7 +85,7 @@ function WriteDropMeters( data,callback) {
                   delete updated;
 
                   errMsg = 'WriteDropDetail error: '  + err;
-                  callback(errmsg,null);
+                  callback(errMsg,null);
 
                } else {
                   connection.close();

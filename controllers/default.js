@@ -3,6 +3,7 @@ var utils = require('util');
 var kioskTableFilter = require('../db/KioskTableFilter');
 var slotTableFilter = require('../db/SlotTableFilter');
 var mailer = require('../db/Mailer');
+var net = require('net');
 
 var post_kioskdata;
 var post_slotdata;
@@ -95,10 +96,54 @@ function post_crashdata() {
   });
 }
 
+// var debugClient = net.connect({port:5000},function() {
+//   console.log('connected');
+
+//  debugClient.on('error',function(e) {
+//     console.log('Error: ' + utils.inspect(e));
+//     debugClient = null;
+//  }); 
+
+
+// });
+
+
+var debugClient1 = null;
+
+function ConnectToDebugClient( cb ) {
+  debugClient1 = net.connect({port:5000},function() {
+
+  });
+debugClient1.on('error',function(e)  {
+  debugClient1 = null;
+  console.log('error connecting1');
+  cb(e,null);
+});
+
+debugClient1.on('connect',function(e) {
+    cb(null,'OK');
+});
+
+
+};
+
+
 
 
 function post_kioskdata() {
   var self = this;
+  if(debugClient1 != null) {
+    debugClient1.write(JSON.stringify(self.post));
+  } else {
+    ConnectToDebugClient(function(err,result){
+      if (err) {
+        console.log('error connecting');
+      } else {
+        console.log('connected1');
+      }
+
+    });
+  }
   totalTransReceived++;
   console.log(self.post);
   kioskTableFilter.ProcessTrans(self.post, function (err, results) {
@@ -120,6 +165,19 @@ function post_kioskdata() {
 
 function post_slotdata() {
   var self = this;
+  if(debugClient1 != null) {
+    debugClient1.write(JSON.stringify(self.post));
+  } else {
+    ConnectToDebugClient(function(err,result){
+      if (err) {
+        console.log('error connecting');
+      } else {
+        console.log('connected1');
+      }
+
+    });
+  }
+  
   totalTransReceived++;
   slotTableFilter.ProcessTrans(self.post, function (err, results) {
   console.log(self.post);

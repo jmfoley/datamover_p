@@ -275,5 +275,10 @@ function ProcessTrans(data,callback){
        });
 
     }
+ } else {
+      data = null;
+      console.log('***In slots catch all*******');
+      callback(null,'OK');
+
  }
 }exports.ProcessTrans = ProcessTrans;

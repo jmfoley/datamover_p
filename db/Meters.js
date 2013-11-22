@@ -608,7 +608,7 @@ function WriteOnlineMeterSnapshot(data,callback) {
          request.addParameter('cc5', TYPES.Int,data.cc5);
          request.addParameter('ch1', TYPES.Int,data.ch1);
          request.addParameter('ch2', TYPES.Int,data.ch2);
-         request.addParameter('ch3', TYPES.Int,data.ch2);
+         request.addParameter('ch3', TYPES.Int,data.ch3);
          request.addParameter('ccr', TYPES.Int,data.ccr);
          request.addParameter('date', TYPES.DateTime,updated);
          request.addParameter('atm', TYPES.Int,data.atm);
