@@ -14,13 +14,14 @@ function RemoveMachineEftMeters(connection,data,callback) {
         if (err) {
             errMsg = 'RemoveMachine error: '  + err;
             sql = null;
-            delete request;
-            callback(errMsg,null);
+            request = null;
+            return callback(errMsg,null);
 
         } else {
            sql = null;
-           delete request;
-           callback(null,results);
+           request = null;
+           results = null;
+           callback(null,'ok');
 
         }       
     });
@@ -39,13 +40,14 @@ function RemoveMachineTicketMeters(connection,data,callback) {
         if (err) {
             errMsg = 'RemoveMachineTicketMeters error: '  + err;
             sql = null;
-            delete request;
-            callback(errMsg,null);
+            request = null;
+            return callback(errMsg,null);
 
         } else {
            sql = null;
-           delete request;
-           callback(null,results);
+           request = null;
+           results = null;
+           callback(null,'ok');
 
         }       
     });
@@ -64,13 +66,14 @@ function RemoveMachineDenomMeters(connection,data,callback) {
         if (err) {
             errMsg = 'RemoveMachineDenomMeters error: '  + err;
             sql = null;
-            delete request;
-            callback(errMsg,null);
+            request = null;
+            return callback(errMsg,null);
 
         } else {
            sql = null;
-           delete request;
-           callback(null,results);
+           request = null;
+           results = null;
+           callback(null,'ok');
 
         }       
     });
@@ -89,13 +92,14 @@ function RemoveMachineMultiGameMeters(connection,data,callback) {
         if (err) {
             errMsg = 'RemoveMachineMultiGameMeters error: '  + err;
             sql = null;
-            delete request;
-            callback(errMsg,null);
+            request = null;
+            return callback(errMsg,null);
 
         } else {
            sql = null;
-           delete request;
-           callback(null,results);
+           request = null;
+           results = null;
+           return callback(null,results);
 
         }       
     });
@@ -114,7 +118,7 @@ function RemoveMachine( data, callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
             connection = results;
@@ -129,8 +133,8 @@ function RemoveMachine( data, callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
 
                 } else {
                    RemoveMachineEftMeters(connection,data, function(err,results) {
@@ -138,37 +142,40 @@ function RemoveMachine( data, callback) {
                          connection.close();
                          connection = null;
                          sql = null;
-                         callback(err,null);
-                         delete request;
+                         request = null;
+                         return callback(err,null);
                        } else {
                            RemoveMachineTicketMeters(connection,data,function(err,results) {
                               if (err) {
                                  connection.close();
                                  connection = null;
                                  sql = null;
-                                 callback(err,null);
-                                 delete request;
+                                 request = null;
+                                 return callback(err,null);
+                 
                                } else {
                                   RemoveMachineDenomMeters(connection,data,function(err,results) {
                                       if (err) {
                                          connection.close();
                                          connection = null;
                                          sql = null;
-                                         callback(err,null);
-                                         delete request;
+                                         request = null;
+                                         return callback(err,null);
                                        } else {
                                           RemoveMachineMultiGameMeters(connection,data,function(err,results) {
                                               if (err) {
                                                  connection.close();
                                                  connection = null;
                                                  sql = null;
-                                                 callback(err,null);
+                                                 results = null;
+                                                 return callback(err,null);
                                              } else {
                                                connection.close();
                                                connection = null;
                                                sql = null;
-                                               delete request;
-                                               callback(null,results);
+                                               request = null;
+                                               results = null;
+                                               return callback(null,'ok');
   
                                              }
 
@@ -211,7 +218,7 @@ function EditMachine( data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
            connection = results;
@@ -230,18 +237,19 @@ function EditMachine( data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
-                    callback(errMsg,null);
+                    return callback(errMsg,null);
 
                 } else {
 
                    connection.close();
                    connection = null;
                    sql = null;
-                   delete request;
+                   request = null;
                    delete updated;
-                   callback(null,results);
+                   results = null;
+                   callback(null,'ok');
 
                 }
 
@@ -282,7 +290,7 @@ function AddMachine(data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
         	connection = results;
@@ -297,16 +305,17 @@ function AddMachine(data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
 
                 } else {
 
                    connection.close();
                    connection = null;
                    sql = null;
-                   delete request;
-                   callback(null,results);
+                   request = null;
+                   results = null;
+                   callback(null,'ok');
 
                 }
             });
@@ -343,7 +352,7 @@ function AddUpdateMachine(data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
           connection = results;
@@ -365,16 +374,17 @@ function AddUpdateMachine(data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
 
                 } else {
 
                    connection.close();
                    connection = null;
                    sql = null;
-                   delete request;
-                   callback(null,results);
+                   request = null;
+                   results = null;
+                   callback(null,'ok');
 
                 }
             });
@@ -412,7 +422,7 @@ function ActivatePendingMachine(data,callback) {
   dbConnect.GetDbConnection(data.operatorid,function(err,results) {
       if (err) {
           errMsg = 'GetDbConnection error: ' + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
 
       } else {
         connection = results;
@@ -425,16 +435,17 @@ function ActivatePendingMachine(data,callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
-                callback(errMsg,null);
+                request = null;
+                return callback(errMsg,null);
 
             } else {
 
                connection.close();
                connection = null;
                sql = null;
-               delete request;
-               callback(null,results);
+               request = null;
+               results = null;
+               callback(null, 'ok');
 
             }
         });

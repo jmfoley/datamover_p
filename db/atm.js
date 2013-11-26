@@ -1,3 +1,6 @@
+
+//module.exports = atm;
+
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
@@ -5,6 +8,154 @@ var dbConnect = require('./DbConnectionPool');
 var errMsg = '';
 
 function callback(error, results) {}
+
+
+// function atm() {
+//   console.log('***********in constructor***********');
+//   if (!(this instanceof atm))
+//     return new atm();
+// }
+
+
+//  atm.prototype.WriteAtmTrans = function (data, callback) {
+  function WriteAtmTrans (data, callback) {
+  
+  var sql = '';
+  var connection;
+  var updated = new Date();
+    
+
+  
+  dbConnect.GetDbConnection(data.operatorid, function (err, results) {
+    if (err) {
+      errMsg = 'GetDbConnection error: ' + err;
+      return callback(errMsg, null);
+    } else {
+      connection = results;
+      sql = 'insert into db_atmTrans(recid,operatorID,unitId,unitPropId,terminalId,transCode,acctType,sequenceNum,responseCode,authNum,transDate,' +
+            'transTime,businessDate,amount1,amount2,cardLast4,updated)values(newid(),@oper,@unitid,@propid,@termid,@transcode,@accttype,@seqnum,@rescode,' +
+            '@authnum,@transdate,@transtime,@busdate,@amt1,@amt2,@last4,@updated)';
+  
+      //return callback(null,'ok');
+
+      var request = new Request(sql, function (err, rowCount) {
+        if (err) {
+          errMsg = 'WriteAtmTrans Error: ' + err;
+          connection.close();
+          connection = null;
+          sql = null;
+          updated = null;
+          request = null;
+          results = null;
+          err = null;
+          return callback(errMsg, null);
+        } else {
+          connection.close();
+          connection = null;
+          sql = null;
+          request = null;
+          updated = null;
+          results = null;
+          rowCount = null;
+          return callback(null, rowCount);
+        }
+      });
+
+      request.addParameter('oper', TYPES.Int, data.operatorid);
+      request.addParameter('unitid', TYPES.Int, data.unit);
+      request.addParameter('propid', TYPES.Int, data.propid);
+      request.addParameter('termid', TYPES.NVarChar, data.terminalid);
+      request.addParameter('transcode', TYPES.NVarChar, data.transcode);
+      request.addParameter('accttype', TYPES.NVarChar, data.accttype);
+      request.addParameter('seqnum', TYPES.Int, data.seq);
+      request.addParameter('rescode', TYPES.Int, data.response);
+      request.addParameter('authnum', TYPES.Int, data.auth);
+      request.addParameter('transdate', TYPES.Int, data.transdate);
+      request.addParameter('transtime', TYPES.Int, data.transtime);
+      request.addParameter('busdate', TYPES.Int, data.busdate);
+      request.addParameter('amt1', TYPES.Int, data.amt1);
+      request.addParameter('amt2', TYPES.Int, data.amt2);
+      request.addParameter('last4', TYPES.NVarChar, data.last4);
+      request.addParameter('updated', TYPES.DateTime, updated);
+      connection.execSql(request);
+    }
+
+  });
+
+}
+exports.WriteAtmTrans = WriteAtmTrans;
+
+
+
+
+
+
+
+function WriteAtmMessage(data, callback) {
+
+  
+  //return callback(null, 'ok');
+  var sql = '';
+  var connection;
+  var created = new Date(data.createdDate);
+
+  
+
+  dbConnect.GetDbConnection(data.operatorId, function (err, results) {
+    if (err) {
+      errMsg = 'WriteAtmMessage error: ' + err;
+      return callback(errMsg, null);
+    } else {
+      connection = results;
+      // sql = 'insert into db_atmMessages(messageContent,truncated,request,atmHost,parity,operatorId,unitId,unitPropId,error,'  +
+      //       'messageSequenceID,createdDate) values(@msgCon,@trunc,@req,@host,@par,@oper,@unit,@prop,@err,@seq,@date)';
+
+      sql = 'insert into db_atmMessages(messageContent,truncated,request,atmHost,parity,operatorId,unitId,unitPropId,'  +
+            'createdDate,db_atmMessageID,messageSequenceID,error) values(convert(varbinary,@msgCon),@trunc,@req,@host,@par,@oper,' +
+            '@unit,@prop,@date,@msgId,@seq,@err)';
+
+
+      var request = new Request(sql, function (err, results) {
+        if (err) {
+          errMsg = 'WriteAtmMessage error: ' + err;
+          connection.close();
+          connection = null;
+          sql = null;
+          //delete request;
+          return callback(errMsg, null);
+        } else {
+          connection.close();
+          connection = null;
+          sql = null;
+          request = null;
+          results = null;
+          return callback(null, 'ok');
+        }
+
+      });
+
+
+      request.addParameter('msgCon', TYPES.VarChar, data.messageContent);
+      request.addParameter('trunc', TYPES.Int, data.truncated);
+      request.addParameter('req', TYPES.Int, data.request);
+      request.addParameter('host', TYPES.VarChar, data.atmHost);
+      request.addParameter('par', TYPES.Int, data.parity);
+      request.addParameter('err', TYPES.VarChar, data.errorValue);
+      request.addParameter('oper', TYPES.Int, data.operatorId);
+      request.addParameter('unit', TYPES.Int, data.unitId);
+      request.addParameter('prop', TYPES.Int, data.unitPropId);
+      request.addParameter('seq', TYPES.UniqueIdentifierN, data.messageSeqId);
+      request.addParameter('date', TYPES.DateTime, created);
+      request.addParameter('msgId', TYPES.Int, data.db_atmMessageId);
+      connection.execSql(request);
+
+    }
+
+  });
+
+}
+exports.WriteAtmMessage = WriteAtmMessage;
+
 
 
 
@@ -16,7 +167,7 @@ function UpdateAtmReversalReties(data, callback) {
   dbConnect.GetDbConnection(data.operatorId, function (err, results) {
     if (err) {
       errMsg = 'UpdateAtmReversalReties error ' + err;
-      callback(errMsg, null);
+      return callback(errMsg, null);
     } else {
 
       connection = results;
@@ -29,14 +180,16 @@ function UpdateAtmReversalReties(data, callback) {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(errMsg, null);
+          request = null;
+          results = null;
+          return callback(errMsg, null);
         } else {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(null, results);
+          request = null;
+          results = null;
+          return callback(null, 'ok');
         }
 
       });
@@ -65,7 +218,7 @@ function InsertAtmReversalReties(data, callback) {
   dbConnect.GetDbConnection(data.operatorId, function (err, results) {
     if (err) {
       errMsg = 'InsertAtmReversalReties error ' + err;
-      callback(errMsg, null);
+      return callback(errMsg, null);
     } else {
 
       connection = results;
@@ -79,14 +232,15 @@ function InsertAtmReversalReties(data, callback) {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(errMsg, null);
+          request = null;
+          return callback(errMsg, null);
         } else {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(null, results);
+          request = null;
+          results = null;
+          return callback(null, 'ok');
         }
 
       });
@@ -126,7 +280,7 @@ function UpdateAtmMessage(data, callback) {
   dbConnect.GetDbConnection(data.operatorId, function (err, results) {
     if (err) {
       errMsg = 'UpdateAtmMessage error: ' + err;
-      callback(errMsg, null);
+      return callback(errMsg, null);
     } else {
       connection = results;
       sql = 'update db_atmMessages set formatRecognized = @format,messageContent = convert(varbinary,@msgCon) where db_atmMessageID = @id ' +
@@ -138,14 +292,15 @@ function UpdateAtmMessage(data, callback) {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(errMsg, null);
+          request = null;
+          return callback(errMsg, null);
         } else {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(null, results);
+          request = null;
+          results = null;
+          return callback(null, 'ok');
         }
       });
 
@@ -166,64 +321,8 @@ exports.UpdateAtmMessage = UpdateAtmMessage;
 
 
 
-function WriteAtmMessage(data, callback) {
-  var sql = '';
-  var connection;
-  var created = new Date(data.createdDate);
-
-  dbConnect.GetDbConnection(data.operatorId, function (err, results) {
-    if (err) {
-      errMsg = 'WriteAtmMessage error: ' + err;
-      callback(errMsg, null);
-    } else {
-      connection = results;
-      // sql = 'insert into db_atmMessages(messageContent,truncated,request,atmHost,parity,operatorId,unitId,unitPropId,error,'  +
-      //       'messageSequenceID,createdDate) values(@msgCon,@trunc,@req,@host,@par,@oper,@unit,@prop,@err,@seq,@date)';
-
-      sql = 'insert into db_atmMessages(messageContent,truncated,request,atmHost,parity,operatorId,unitId,unitPropId,'  +
-            'createdDate,db_atmMessageID,messageSequenceID,error) values(convert(varbinary,@msgCon),@trunc,@req,@host,@par,@oper,' +
-            '@unit,@prop,@date,@msgId,@seq,@err)';
 
 
-      var request = new Request(sql, function (err, results) {
-        if (err) {
-          errMsg = 'WriteAtmMessage error: ' + err;
-          connection.close();
-          connection = null;
-          sql = null;
-          //delete request;
-          callback(errMsg, null);
-        } else {
-          connection.close();
-          connection = null;
-          sql = null;
-          //delete request;
-          callback(null, results);
-        }
-
-      });
-
-
-      request.addParameter('msgCon', TYPES.VarChar, data.messageContent);
-      request.addParameter('trunc', TYPES.Int, data.truncated);
-      request.addParameter('req', TYPES.Int, data.request);
-      request.addParameter('host', TYPES.VarChar, data.atmHost);
-      request.addParameter('par', TYPES.Int, data.parity);
-      request.addParameter('err', TYPES.VarChar, data.errorValue);
-      request.addParameter('oper', TYPES.Int, data.operatorId);
-      request.addParameter('unit', TYPES.Int, data.unitId);
-      request.addParameter('prop', TYPES.Int, data.unitPropId);
-      request.addParameter('seq', TYPES.UniqueIdentifierN, data.messageSeqId);
-      request.addParameter('date', TYPES.DateTime, created);
-      request.addParameter('msgId', TYPES.Int, data.db_atmMessageId);
-      connection.execSql(request);
-
-    }
-
-  });
-
-}
-exports.WriteAtmMessage = WriteAtmMessage;
 
 
 function WriteAtmResponseMessage(data, callback) {
@@ -235,7 +334,7 @@ function WriteAtmResponseMessage(data, callback) {
   dbConnect.GetDbConnection(data.operatorId, function (err, results) {
     if (err) {
       errMsg = 'WriteAtmResponseMessage error: ' + err;
-      callback(errMsg, null);
+      return callback(errMsg, null);
     } else {
       connection = results;
       sql = 'insert into db_atmResponseMessages(operatorId,unitId,unitPropId,db_atmResponseMessageID,db_atmRequestMessageID,' +
@@ -253,14 +352,15 @@ function WriteAtmResponseMessage(data, callback) {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(errMsg, null);
+          request = null;
+          return callback(errMsg, null);
         } else {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(null, rowCount);
+          request = null;
+          rowCount = null;
+          return callback(null, 'ok');
         }
 
       });
@@ -317,7 +417,7 @@ function WriteAtmRequestMessage(data, callback) {
   dbConnect.GetDbConnection(data.operatorId, function (err, results) {
     if (err) {
       errMsg = 'WriteAtmRequestMessage error: ' + err;
-      callback(errMsg, null);
+      return callback(errMsg, null);
     } else {
       connection = results;
       sql = 'insert into db_atmRequestMessages (operatorId,unitId,unitPropId,db_atmRequestMessageID,cf_atmRequestAndResponseMessageFormatID,' +
@@ -342,14 +442,15 @@ function WriteAtmRequestMessage(data, callback) {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(errMsg, null);
+          request = null;
+          return callback(errMsg, null);
         } else {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          callback(null, rowCount);
+          request = null;
+          rowCount = null;
+          return callback(null, 'ok');
         }
       });
 
@@ -433,11 +534,11 @@ function UpdateAtmTrans(data, callback) {
   var sql = '';
   var connection;
   var updated = new Date();
-
+  
   dbConnect.GetDbConnection(data.operatorid, function (err, results) {
     if (err) {
       errMsg = 'GetDbConnection error: ' + err;
-      callback(errMsg, null);
+      return callback(errMsg, null);
     } else {
       connection = results;
       sql = 'update db_atmTrans set transNumber = @trans,updated = @date where sequenceNum = @seq and unitId = @unitid and unitPropId = @prop';
@@ -448,16 +549,17 @@ function UpdateAtmTrans(data, callback) {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          //delete updated;
-          callback(errMsg, null);
+          request = null;
+          delete updated;
+          return callback(errMsg, null);
         } else {
           connection.close();
           connection = null;
           sql = null;
-          //delete request;
-          //delete updated; 
-          callback(null, rowCount);
+          request = null;
+          rowCount = null;
+          delete updated; 
+          return callback(null, 'ok');
         }
       });
 
@@ -478,61 +580,3 @@ exports.UpdateAtmTrans = UpdateAtmTrans;
 
 
 
-function WriteAtmTrans(data, callback) {
-  var sql = '';
-  var connection;
-  var updated = new Date();
-
-
-  dbConnect.GetDbConnection(data.operatorid, function (err, results) {
-    if (err) {
-      errMsg = 'GetDbConnection error: ' + err;
-      callback(errMsg, null);
-    } else {
-      connection = results;
-      sql = 'insert into db_atmTrans(recid,operatorID,unitId,unitPropId,terminalId,transCode,acctType,sequenceNum,responseCode,authNum,transDate,' +
-            'transTime,businessDate,amount1,amount2,cardLast4,updated)values(newid(),@oper,@unitid,@propid,@termid,@transcode,@accttype,@seqnum,@rescode,' +
-            '@authnum,@transdate,@transtime,@busdate,@amt1,@amt2,@last4,@updated)';
-
-      var request = new Request(sql, function (err, rowCount) {
-        if (err) {
-          errMsg = 'WriteAtmTrans Error: ' + err;
-          connection.close();
-          connection = null;
-          sql = null;
-          //delete request;
-          //delete updated;
-          callback(errMsg, null);
-        } else {
-          connection.close();
-          connection = null;
-          sql = null;
-          //delete request;
-          //delete updated;
-          callback(null, rowCount);
-        }
-      });
-
-      request.addParameter('oper', TYPES.Int, data.operatorid);
-      request.addParameter('unitid', TYPES.Int, data.unit);
-      request.addParameter('propid', TYPES.Int, data.propid);
-      request.addParameter('termid', TYPES.NVarChar, data.terminalid);
-      request.addParameter('transcode', TYPES.NVarChar, data.transcode);
-      request.addParameter('accttype', TYPES.NVarChar, data.accttype);
-      request.addParameter('seqnum', TYPES.Int, data.seq);
-      request.addParameter('rescode', TYPES.Int, data.response);
-      request.addParameter('authnum', TYPES.Int, data.auth);
-      request.addParameter('transdate', TYPES.Int, data.transdate);
-      request.addParameter('transtime', TYPES.Int, data.transtime);
-      request.addParameter('busdate', TYPES.Int, data.busdate);
-      request.addParameter('amt1', TYPES.Int, data.amt1);
-      request.addParameter('amt2', TYPES.Int, data.amt2);
-      request.addParameter('last4', TYPES.NVarChar, data.last4);
-      request.addParameter('updated', TYPES.DateTime, updated);
-      connection.execSql(request);
-    }
-
-  });
-
-}
-exports.WriteAtmTrans = WriteAtmTrans;
