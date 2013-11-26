@@ -1,5 +1,3 @@
-
-
 var http = require('http');
 var cluster = require('cluster');
 var os = require('os');

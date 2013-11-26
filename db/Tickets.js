@@ -13,7 +13,7 @@ function SaveHandpayVoucher(data,callback){
     console.log('In savehandpay');
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     	if (err) {
-    		callback(err,null);
+    		return callback(err,null);
     	} else {
     		connection = results;
     		sql = 'insert into tk_tickets(operatorId,print_mach_num,validation_num,amount,state,print_datetime,' +
@@ -28,14 +28,15 @@ function SaveHandpayVoucher(data,callback){
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
                 } else {
                      connection.close();
                      connection = null;
                      sql = null;
-                     delete request;
-                     callback(null,results);
+                     request = null;
+                     results = null;
+                     callback(null,'ok');
                 }
 
             });
@@ -78,7 +79,7 @@ function UpdatePendingTrans(data,callback){
 
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
-            callback(err,null);
+            return callback(err,null);
         } else {
             connection = results;
             sql = 'update tk_tickets set state = 2,redeem_datetime = @date,cashier = @cashier,updated = @date ' +
@@ -90,14 +91,15 @@ function UpdatePendingTrans(data,callback){
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
-                callback(errMsg,null);
+                request = null;
+                return callback(errMsg,null);
             } else {
                  connection.close();
                  connection = null;
                  sql = null;
-                 delete request;
-                 callback(null,results);
+                 request = null;
+                 results = null;
+                 callback(null,'ok');
             }
 
         });

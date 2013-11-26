@@ -20,13 +20,13 @@ function CheckUnitTransDetail(connection,data,callback) {
         if(err) {
             errMsg = 'CheckUnitTransDetail error: ' + err;
             sql = null;
-            delete request;
-            callback(errMsg,null);
+            request = null;
+            return callback(errMsg,null);
 
         } else {
              sql = null;
-             delete request;
-            callback(null,records);
+             request = null;
+             return callback(null,records);
         }
 
     });          
@@ -65,7 +65,7 @@ function WriteUnitTransDetail( data,callback) {
 
         if (err) {
              errMsg = 'GetDbConnection error: ' + err;
-             callback(errMsg,null);
+             return callback(errMsg,null);
  
         } else {
             
@@ -76,7 +76,7 @@ function WriteUnitTransDetail( data,callback) {
 
                         connection.close();
                         connection = null;
-                        callback(err,null);
+                        return callback(err,null);
 
                     } else {
 
@@ -100,16 +100,17 @@ function WriteUnitTransDetail( data,callback) {
                                       connection.close();
                                       connection = null;
                                       sql = null;
-                                      delete request;
+                                      request = null;
                                       delete updated;
-                                      callback(errMsg,null) ;
+                                      return callback(errMsg,null) ;
                                   } else {
                                        connection.close();
                                        connection = null;
                                        sql = null;
-                                       delete request;
+                                       request = null;
                                        delete updated;
-                                       callback(null,rowCount);
+                                       rowCount = null;
+                                       return callback(null,'ok');
                                   }
                               }); 
 
@@ -157,7 +158,7 @@ function SetPendingTransToComplete( data, callback) {
 
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(err,null);
+            return callback(err,null);
         } else {
             
             connection = results;
@@ -173,17 +174,18 @@ function SetPendingTransToComplete( data, callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-                callback(null,rowCount);
+                rowCount = null;
+                return callback(null,'ok');
             
             }
 
@@ -216,7 +218,7 @@ function CompleteCurrentTrans( data,callback) {
     
         if (err) {
           errMsg = 'GetDbConnection error: ' + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
         } else {
             connection = results;
 
@@ -240,17 +242,18 @@ function CompleteCurrentTrans( data,callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 conenction = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-                callback(null,connection);
+                rowCount = null;
+                return callback(null,'ok');
             
             }
 
@@ -289,7 +292,7 @@ function WriteKioskTrans(data,callback) {
 
          if (err) {
           errMsg = 'GetDbConnection error: ' + err;          
-         	callback(errMsg,null);
+         	return callback(errMsg,null);
          } else {
             console.log("data = : " + data.transtarttime);
             var connection = results;
@@ -306,19 +309,20 @@ function WriteKioskTrans(data,callback) {
         	    connection.close();
               connection = null;
               sql = null;
-              delete request;
+              request = null;
               delete transTime;
               delete updated;
-        	    callback(errMsg,null);
+        	    return callback(errMsg,null);
         	
             } else{
         	    connection.close();
               connection = null;
               sql = null;
-              delete request;
+              request = null;
               delete transTime;
               delete updated;
-        	    callback(null,connection);
+              rowCount = null;
+        	    return callback(null,'ok');
         	
             }
 

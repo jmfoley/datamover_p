@@ -14,11 +14,13 @@ function UpdateUnitStatus (data, callback){
   var connection;
   var updated = new Date(data.updated);
   
-  console.log(util.inspect(data)); 
+  //console.log(util.inspect(data)); 
   dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     if (err) {
       errMsg = 'GetDbConnection error: ' + err;
-      callback(errMsg,null);
+      updated = null;
+      return callback(errMsg,null);
+
     } else {
       connection = results;
       sql = 'update sc_units set floorStatus = @status,updated = @updated where unitid = @id and ' +
@@ -27,12 +29,18 @@ function UpdateUnitStatus (data, callback){
       var request = new Request(sql,function(err,results) {
         if (err) {
           sql = null;
+          connection.close();
           errMsg = 'UpdateUnitStatus error: '  + err;
-          callback(errMsg,null);
+          updated = null;
+          results = null;
+          return callback(errMsg,null);
 
         } else {
+          connection.close();
           sql = null;
-          callback(null,results);
+          updated = null;
+          results = null;
+          return callback(null,'ok');
 
         }
       });
@@ -59,7 +67,7 @@ function UpdateAtmId(data,callback){
   dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     if (err){
       errMsg = 'GetDbConnection error: ' + err;
-      callback(errMsg,null);
+      return callback(errMsg,null);
     } else {
       connection = results;  
       sql = 'update sc_units set atmTerminalId = @atmid where unitid = @id and ' +
@@ -67,16 +75,18 @@ function UpdateAtmId(data,callback){
 
       var request = new Request(sql,function(err,results) {
         if (err) {
+              connection.close();
               sql = null;
-              delete request;
+              request = null;
               delete updated;
               errMsg = 'UpdateAtmId error: '  + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
         } else {
+               connection.close();
                sql = null;
-               delete request;
+               request = null;
                delete updated;
-          callback(null,results);
+          return callback(null,'ok');
         }
 
       });
@@ -106,7 +116,7 @@ function UpdateMultiGameDesc( data,callback) {
   dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     if (err){
       errMsg = 'GetDbConnection error: ' + err;
-      callback(errMsg,null);
+      return callback(errMsg,null);
     } else {
       connection = results;  
       sql = 'update sc_multigameconfig set multitypedesc = @desc,updated = @date,updatedby = @updatedby,' +
@@ -115,16 +125,18 @@ function UpdateMultiGameDesc( data,callback) {
 
       var request = new Request(sql,function(err,results) {
         if (err) {
+              connection.close();
               sql = null;
-              delete request;
+              request = null;
               delete updated;
               errMsg = 'UpdateMultiGameDesc error: '  + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
         } else {
+               connection.close();
                sql = null;
-               delete request;
+               request = null;
                delete updated;
-          callback(null,results);
+          return callback(null,'ok');
         }
 
       });
@@ -163,7 +175,7 @@ function UpdateUnitSession( data, callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'UpdateUnitSession error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
 
@@ -177,16 +189,17 @@ function UpdateUnitSession( data, callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
-                    callback(errMsg,null);
+                    return callback(errMsg,null);
                 } else {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
-                    callback(err,results);
+                    results = null;
+                    return callback(err,'ok');
                 }
 
             });
@@ -215,7 +228,7 @@ function DeleteBillbreakConfig( data,callback ) {
 
         if (err) {
             errMsg = 'DeleteBillbreakConfig error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
         } else {
             connection = results;
             sql = 'delete from sc_billBreaks where billdenom = @denom and propId = @prop and operatorID = @oper';
@@ -224,18 +237,19 @@ function DeleteBillbreakConfig( data,callback ) {
 
                 if (err) {
                     errMsg = 'DeleteBillbreakConfig error: ' + err;
+                    connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
 
-                    callback(errMsg,null);
+                    return callback(errMsg,null);
                 } else {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-
-                    callback(err,results);
+                    request = null;
+                    results = null;
+                    return callback(null,'ok');
                 }
 
             });
@@ -266,7 +280,7 @@ function UpdateBillbreakConfig(data,callback) {
 
         if (err) {
             errMsg = 'UpdateBillbreakConfig error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
         } else {
             connection = results;
             sql = 'update sc_billbreaks set bill1 = @bill1,bill2 = @bill2,bill5 = @bill5, bill10 = @bill10,bill20 = @bill20,' +
@@ -278,19 +292,21 @@ function UpdateBillbreakConfig(data,callback) {
 
                 if (err) {
                     errMsg = 'UpdateBillbreakConfig error: ' + err;
+                    connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
-                    callback(errMsg,null);
+                    return callback(errMsg,null);
                 } else {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
+                    results = null;
 
-                    callback(err,results);
+                    return callback(null,'ok');
                 }
 
 
@@ -330,7 +346,7 @@ function AddBillbreakConfig(data,callback) {
 
         if (err) {
             errMsg = 'AddBillbreakConfig error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
         } else {
             connection = results;
             sql = 'insert into sc_billbreaks(billDenom,bill1,bill2,bill5,bill10,bill20,bill50,bill100,propid,updated,operatorID)values(' +
@@ -340,20 +356,22 @@ function AddBillbreakConfig(data,callback) {
 
                 if (err) {
                     errMsg = 'AddBillbreakConfig error: ' + err;
+                    connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
 
-                    callback(errMsg,null);
+                    return callback(errMsg,null);
                 } else {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete updated;
+                    results = null;
 
-                    callback(err,results);
+                    return callback(null,'ok');
                 }
 
             });
@@ -389,7 +407,7 @@ function UpdateCreditCardOption(data,callback) {
 
         if (err) {
              errMsg = 'GetDbConnection error: ' + err;
-             callback(errMsg,null);
+             return callback(errMsg,null);
 
         } else {
    
@@ -404,19 +422,18 @@ function UpdateCreditCardOption(data,callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-                callback(null,connection);
+                rowCount = null; 
+                return callback(null,'ok');
             
             }
 
@@ -451,7 +468,7 @@ function UpdateAppVersion(data,callback) {
 
         if (err) {
              errMsg = 'GetDbConnection error: ' + err;
-             callback(errMsg,null);
+             return callback(errMsg,null);
 
         } else {
    
@@ -466,18 +483,18 @@ function UpdateAppVersion(data,callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-                callback(null,connection);
+                rowCount = null;
+                return callback(null,'ok');
             
             }
 
@@ -509,7 +526,7 @@ function DeleteUnitDevice(data, callback) {
 
         if (err) {
              errMsg = 'GetDbConnection error: ' + err;
-             callback(errMsg,null);
+             return callback(errMsg,null);
 
         } else {
    
@@ -524,17 +541,17 @@ function DeleteUnitDevice(data, callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
-
-                callback(errMsg,null);
+                request = null;
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
+                rowCount = null;
 
-                callback(null,connection);
+                return callback(null,'ok');
             
             }
 
@@ -570,7 +587,7 @@ function UpdateUnitDevice(data, callback) {
 
         if (err) {
              errMsg = 'GetDbConnection error: ' + err;
-             callback(errMsg,null);
+             return callback(errMsg,null);
 
         } else {
    
@@ -586,19 +603,19 @@ function UpdateUnitDevice(data, callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
 
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-                callback(null,connection);
+                rowCount = null;
+                return callback(null,'ok');
             
             }
 
@@ -640,7 +657,7 @@ function InsertUnitDevice(data, callback) {
 
         if (err) {
              errMsg = 'GetDbConnection error: ' + err;
-             callback(errMsg,null);
+             return callback(errMsg,null);
 
         } else {
    
@@ -656,19 +673,18 @@ function InsertUnitDevice(data, callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-                callback(null,connection);
+                rowCount = null;
+                return callback(null,'ok');
             
             }
 
@@ -705,7 +721,7 @@ function DeleteUnitDenomConfig(data,callback) {
     
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
 
@@ -720,17 +736,17 @@ function DeleteUnitDenomConfig(data,callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
-
-                callback(errMsg,null);
+                request = null;
+                return callback(errMsg,null);
             
             } else {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
+                rowCount = null;
 
-                callback(null,connection);
+                return callback(null,'ok');
             
             }
 
@@ -762,7 +778,7 @@ function UpdateDenomConfig(data,callback) {
 
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
 
@@ -778,19 +794,20 @@ function UpdateDenomConfig(data,callback) {
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
 
-                callback(errMsg,null);
+                return callback(errMsg,null);
             
             } else{
                 connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
+                rowCount = null;
 
-                callback(null,connection);
+                return callback(null,'ok');
             
             }
 
@@ -826,7 +843,7 @@ function UpdateKioskUnit(data,callback) {
 
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-        	callback(errMsg,null);
+        	return callback(errMsg,null);
 
         } else {
             connection = results;
@@ -845,19 +862,19 @@ function UpdateKioskUnit(data,callback) {
         	    connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
 
-        	    callback(errMsg,null);
+        	    return callback(errMsg,null);
         	
             } else{
         	    connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-
-        	    callback(null,connection);
+                rowCount = null; 
+        	    return callback(null,'ok');
         	
             }
 

@@ -14,13 +14,10 @@ function UpdateLastCom( data,callback) {
     var connection;
     var lastCom = new Date(data.lastcom);
     
-
-    console.log(util.inspect(data));
-    console.log('In UpdateLastCom');
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
             connection = results;
@@ -33,18 +30,19 @@ function UpdateLastCom( data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     delete lastCom;
-                    callback(errMsg,null);
+                    return callback(errMsg,null);
 
 
                 } else {
                    connection.close();
                    connection = null;
                    sql = null;
-                   delete request;
+                   request = null;
                    delete lastCom;
-                   callback(null,results);
+                   results = null;
+                   return callback(null,'ok');
 
                 }
             }); 
@@ -75,13 +73,13 @@ function CheckSlotsTable(connection,data,callback) {
     var request = new Request(sql,function(err,rowCount) {
     	if (err) {
             sql = null;
-            delete request;
+            request = null;
             errMsg = 'CheckSlotsTable error: '  + err;
-    		callback(errMsg,null);
+    		return callback(errMsg,null);
     	} else {
              sql = null;
-             delete request;
-    		callback(null,records);
+             request = null;
+    		return callback(null,records);
     	}
 
     });          
@@ -118,20 +116,22 @@ function UpdateSlotsMeters(data,callback) {
     var lastCom = new Date(data.lastcom);
     var updated = new Date();
 
-    console.log('In updateSlotsMeters: Operatorid = ' + data.operatorid);
-
+    //console.log('In updateSlotsMeters: Operatorid = ' + data.operatorid);
+    //console.log('data = ' + util.inspect(data)); 
 
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     if (err) {
         errMsg = 'GetDbConnection error: ' + err;
-        callback(errMsg,null);
+        return callback(errMsg,null);
 
     } else {
         connection = results;
         CheckSlotsTable(connection,data,function(err,rowCount) {
         	if (err) {
                 connection.close();
-                callback(err,null);
+                connection = null;
+                rowCount = null;
+                return callback(err,null);
 
         	} else {
                  if (rowCount > 0 ) {
@@ -154,19 +154,20 @@ function UpdateSlotsMeters(data,callback) {
                             connection.close();
                             connection = null;
                             sql = null;
-                            delete request;
+                            request = null;
                             delete lastCom;
                             delete updated;
-                            callback(errMsg,null);
+                            return callback(errMsg,null);
 
                         } else {
                            connection.close();
                            connection = null;
                            sql = null;
-                           delete request;
+                           request = null;
                            delete lastCom;
                            delete updated;
-                           callback(null,results);
+                           results = null;
+                           return callback(null,'ok');
 
                         }
                     }); 
@@ -205,6 +206,10 @@ function UpdateSlotsMeters(data,callback) {
  
 
 
+                 } else {
+                    connection.close();
+                    connection = null;
+                    return callback(null,'ok');
                  }
                }
          	

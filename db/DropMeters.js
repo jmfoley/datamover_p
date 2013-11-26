@@ -19,7 +19,7 @@ function UpdateFillTrans (data, callback){
    dbConnect.GetDbConnection( data.operatorid, function (err, results) {
      if (err) {
           errMsg = 'GetDbConnection error: ' + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
       } else {
         connection = results;
         sql = 'update db_filltrans set transStatus = 1, kioskTransNumber = @kioskTransNumber, processed = @processed ' +
@@ -31,15 +31,15 @@ function UpdateFillTrans (data, callback){
               connection = null;
               sql = null;
               errMsg = 'UpdateFillTrans error: '  + err;
-              //console.log('err1');
-              //console.log(err);
-              callback(errmsg,null);
+              request = null;
+              return callback(errmsg,null);
             } else {
               connection.close();
               connection = null;
               sql = null;
-              console.log('ok');
-              callback(null,rowCount);
+              rowCount = null;
+              request = null; 
+              return callback(null,'ok');
 
             }
         });
@@ -70,7 +70,7 @@ function WriteDropMeters( data,callback) {
    dbConnect.GetDbConnection(data.operatorid,function(err,results) {
       if (err) {
           errMsg = 'GetDbConnection error: ' + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
       } else {
           connection = results; 
           sql = 'insert into db_unitDropMeters(operatorID,transNumber,unitId,propId,itemId,itemDenom,itemAmount,' +
@@ -81,20 +81,19 @@ function WriteDropMeters( data,callback) {
                   connection.close();
                   connection = null;
                   sql = null;
-                  delete request;
+                  request = null;
                   delete updated;
-
                   errMsg = 'WriteDropDetail error: '  + err;
-                  callback(errMsg,null);
+                  return callback(errMsg,null);
 
                } else {
                   connection.close();
                   connection = null;
                   sql = null;
-                  delete request;
+                  request = null;
                   delete updated;
-
-                  callback(null,rowCount);
+                  rowCount = null;
+                  return callback(null,'ok');
                }
 
           });
@@ -138,7 +137,7 @@ function WriteDropDetail( data,callback) {
    dbConnect.GetDbConnection(data.operatorid,function(err,results) {
       if (err) {
           errMsg = 'GetDbConnection error: ' + err;
-          callback(errMsg,null);
+          return callback(errMsg,null);
       } else {
           connection = results; 
           sql = 'insert into db_unitTransDrop(operatorID,transNumber,unitId,propId,itemId,itemDenom,itemAmount,actualAmount,' +
@@ -149,20 +148,19 @@ function WriteDropDetail( data,callback) {
                   connection.close();
                   connection = null;
                   sql = null;
-                  delete request;
+                  request = null;
                   delete updated;
-
                   errMsg = 'WriteDropDetail error: '  + err;
-                  callback(errMsg,null);
+                  return callback(errMsg,null);
 
                } else {
                   connection.close();
                   connection = null;
                   sql = null;
-                  delete request;
+                  request = null;
                   delete updated;
-
-                  callback(null,rowCount);
+                  rowCount = null;
+                  callback(null,'ok');
                }
 
           });
@@ -202,10 +200,10 @@ function CheckOnlineDropMeters(connection,data,callback) {
     	if (err) {
             errMsg = 'CheckOnlineDropMeters error: '  + err;
             sql = null;
-    		    callback(errMsg,null);
+    		    return callback(errMsg,null);
     	} else {
           sql = null;            
-    		  callback(null,rowCount);
+    		  return callback(null,rowCount);
     	}
 
     });          
@@ -233,13 +231,13 @@ function UpdateOnlineDropMeters( data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
             connection = results;
             CheckOnlineDropMeters(connection,data,function(err,results) {
                 if (err) {
-                    callback(err,null);                    
+                    return callback(err,null);                    
                 } else {
                     if (results > 0) {
 
@@ -258,19 +256,18 @@ function UpdateOnlineDropMeters( data,callback) {
                             connection.close();
                             connection = null;
                             sql = null;
-                            delete request;
+                            request = null;
                             delete updated;
-                            console.log(err);
-
-                            callback(err,null);
+                            return callback(err,null);
                         } else {
                             connection.close();
                             connection = null;
                             sql = null;
-                            delete request;
+                            request = null;
                             delete updated;
+                            results = null;
 
-                            callback(null,results);
+                            callback(null,'ok');
                         }
 
                     });

@@ -19,7 +19,7 @@ function LogUnEx(clientData,errorText,callback) {
 
         if ( err ) {
 
-            callback(err,null);
+            return callback(err,null);
 
         } else {
 
@@ -31,13 +31,16 @@ function LogUnEx(clientData,errorText,callback) {
             if (err) {
                 connection.close();
                 sql = null;
-                console.log(err);
-                callback(err,null);
+                request = null;
+                console.log(errorMsg);
+                return callback(err,null);
         
             } else {
                 connection.close();
                 sql = null;
-                callback(null,connection);
+                request = null;
+                rowCount = null;
+                return callback(null,'ok');
             
             }
 
@@ -68,7 +71,7 @@ function LogError(clientData,errorText,callback) {
 
 		if ( err ) {
 
-			callback(err,null);
+			return callback(err,null);
 
 		} else {
 
@@ -80,13 +83,15 @@ function LogError(clientData,errorText,callback) {
             if (err) {
         	    connection.close();
                 sql = null;
-                console.log(errMsg);
-        	    callback(errMsg,null);
+                console.log(errorText);
+        	    return callback(err,null);
        	
             } else {
         	    connection.close();
                 sql = null;
-        	    callback(null,connection);
+                request = null;
+                rowCount = null;
+        	    return callback(null,'ok');
         	
             }
 

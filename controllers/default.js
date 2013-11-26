@@ -5,6 +5,7 @@ var slotTableFilter = require('../db/SlotTableFilter');
 var mailer = require('../db/Mailer');
 var net = require('net');
 
+
 var post_kioskdata;
 var post_slotdata;
 var post_crashdata;
@@ -110,36 +111,35 @@ function post_crashdata() {
 
 var debugClient1 = null;
 
-function ConnectToDebugClient( cb ) {
-  debugClient1 = net.connect({port:5000},function() {
+function ConnectToDebugClient(cb) {
+  debugClient1 = net.connect({port: 5000}, function () {
 
   });
-debugClient1.on('error',function(e)  {
-  debugClient1 = null;
-  console.log('error connecting1');
-  cb(e,null);
-});
+  debugClient1.on('error', function (e) {
+    debugClient1 = null;
+ // console.log('error connecting1');
+    cb(e, null);
+  });
 
-debugClient1.on('connect',function(e) {
-    cb(null,'OK');
-});
+  debugClient1.on('connect', function (e) {
+    cb(null, 'OK');
+  });
 
 
-};
-
+}
 
 
 
 function post_kioskdata() {
   var self = this;
-  if(debugClient1 != null) {
+  if (debugClient1 !== null) {
     debugClient1.write(JSON.stringify(self.post));
   } else {
     ConnectToDebugClient(function(err,result){
       if (err) {
-        console.log('error connecting');
+       // console.log('error connecting');
       } else {
-        console.log('connected1');
+        //console.log('connected1');
       }
 
     });
@@ -149,11 +149,13 @@ function post_kioskdata() {
   kioskTableFilter.ProcessTrans(self.post, function (err, results) {
     if (err) {
       totalErrorTrans++;
+      err = null;
       self.res.writeHead(200);
       self.close();
 
     } else {
       totalSuccessfulTrans++;
+      results = null;
       self.res.writeHead(200);
       self.close();
 
@@ -170,9 +172,9 @@ function post_slotdata() {
   } else {
     ConnectToDebugClient(function(err,result){
       if (err) {
-        console.log('error connecting');
+        //console.log('error connecting');
       } else {
-        console.log('connected1');
+        //console.log('connected1');
       }
 
     });
@@ -183,11 +185,13 @@ function post_slotdata() {
   console.log(self.post);
     if (err) {
       totalErrorTrans++;
+      err = null;
       self.res.writeHead(200);
       self.close();
 
     } else {
       totalSuccessfulTrans++;
+      results = null;
       self.res.writeHead(200);
       self.close();
     }

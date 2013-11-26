@@ -14,14 +14,13 @@ function CheckTicketMeters(connection,data,callback) {
     var request = new Request(sql,function(err,rowCount) {
     	if (err) {
             sql = null;
-            delete request;
+            request = null;
             errMsg = 'CheckTicketMeters error: '  + err;
-    		callback(errMsg,null);
+    		    return callback(errMsg,null);
     	} else {
              sql = null;
-             delete request;
-             console.log('ticket meter count = ' + records); 
-    		    callback(null,records);
+             request = null;
+      		   callback(null,records);
     	}
 
     });          
@@ -59,14 +58,15 @@ function UpdateTicketMeters(data,callback){
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     	if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
     	} else {
     		connection = results;
     		CheckTicketMeters(connection,data,function(err,rowCount) {
     			if (err) {
             connection.close();
-    				callback(err,null);
+            connection = null;
+    				return callback(err,null);
     			} else {
 
     				if (rowCount > 0) {
@@ -90,18 +90,19 @@ function UpdateTicketMeters(data,callback){
                         connection.close();
                         connection = null;
                         sql = null;
-                        delete request;
+                        request = null;
                         delete updated;
-                        callback(errMsg,null);
+                        return callback(errMsg,null);
 
 
                       } else {
                          connection.close();
                          connection = null;
                          sql = null;
-                         delete request;
+                         request = null;
                          delete updated;
-                         callback(null,rowCount);
+                         rowCount = null;
+                         return callback(null,'ok');
 
                       }
 

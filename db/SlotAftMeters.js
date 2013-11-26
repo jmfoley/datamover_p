@@ -16,13 +16,13 @@ function CheckAftRecord(connection,data,callback) {
     var request = new Request(sql,function(err,rowCount) {
         if (err) {
             sql = null;
-            delete request;
+            request = null;
             errMsg = 'CheckAftRecord error: '  + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
         } else {
              sql = null;
-             delete request;
-            callback(null,records);
+             request = null;
+            return callback(null,records);
         }
 
     });          
@@ -58,14 +58,15 @@ function WriteAftMeters(data,callback){
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
             connection = results;
             CheckAftRecord(connection,data,function(err,rowCount) {
                 if (err) {
                     connection.close();
-                    callback(err,null);
+                    connection = null;
+                    return callback(err,null);
                 } else {
                     if (rowCount > 0 ) {
                         sql = 'update eftmeters set promocredits = @promoin,cashablecredits = @cashin,updated = @date,promocreditscnt = @promoincnt,' +
@@ -86,17 +87,18 @@ function WriteAftMeters(data,callback){
                             connection.close();
                             connection = null;
                             sql = null;
-                            delete request;
+                            request = null;
                             delete updated;
-                            callback(errMsg,null);
+                            return callback(errMsg,null);
 
                         } else {
                            connection.close();
                            connection = null;
                            sql = null;
-                           delete request;
+                           request = null;
                            delete updated;
-                           callback(null,results);
+                           results = null;
+                           return callback(null,'ok');
 
                         }
                     });                    

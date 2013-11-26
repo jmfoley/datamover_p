@@ -12,15 +12,25 @@ var netSock = require('./NetSock');
 var profile = require('./MultiGameProfiles');
 var util = require('util');
 
+// module.exports = KioskTableFilter;
+
+
+// function KioskTableFilter() {
+//   console.log('***********in constructor*****KTF******');
+//   if (!(this instanceof KioskTableFilter))
+//     return new KioskTableFilter();
+// }
+
+
+
+
+//var atm1 = new atm();
 
 
 function callback(error,results){};
 
 
 function ProcessTrans(data,callback){
-    
-
-
     //console.log(util.inspect(data)); 
 
     if(data.table === 'sl_alarms') {
@@ -34,11 +44,11 @@ function ProcessTrans(data,callback){
             });
 
             data = null;
-            callback(err,null);
+            return callback(err,null);
           } else {
           //console.log('Event written');
             data = null;
-            callback(null,results);
+            return callback(null,results);
         }
 
       });
@@ -59,11 +69,11 @@ function ProcessTrans(data,callback){
               });
 
               data = null;
-              callback(err,null);
+              return callback(err,null);
             } else {
               //console.log('Event written');
               data = null;
-              callback(null,results);
+              return callback(null,results);
             }
              
             });
@@ -78,11 +88,11 @@ function ProcessTrans(data,callback){
               });
 
               data = null;
-              callback(err,null);
+              return callback(err,null);
             } else {
               //console.log('Event written');
               data = null;
-              callback(null,results);
+              return callback(null,results);
             }
              
             });
@@ -97,11 +107,11 @@ function ProcessTrans(data,callback){
               });
 
               data = null;
-              callback(err,null);
+              return callback(err,null);
             } else {
               //console.log('Event written');
               data = null;
-              callback(null,results);
+              return callback(null,results);
             }
              
             });
@@ -118,18 +128,18 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
- 			    callback(err,null);
+ 			    return callback(err,null);
  		    } else {
  			    //console.log('Event written');
                 data = null;
- 			    callback(null,results);
+ 			    return callback(null,results);
  		    }
 
  	    });
      } else if ( data.table === 'db_onlinemeters') {
 
          if(data.operation === 'update') {
-        console.log('***** Online meter update********');
+        //console.log('***** Online meter update********');
  	    KioskMeters.UpdateOnlineMeters(data,function(err,results){
  		    if (err) {
  			    console.log('Update Online Meters error: ' + err);
@@ -138,11 +148,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
- 			    callback(err,null);
+ 			    return callback(err,null);
  		    } else {
  			    //console.log('Online meters written');
                 data = null;
- 			    callback(null,results);
+ 			    return callback(null,results);
  		    }
 
  	     });
@@ -156,11 +166,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
             } else {
                 //console.log('ZeroCoinHopper written');
                 data = null;
-                callback(null,results);
+                return callback(null,results);
             }
 
 
@@ -170,10 +180,10 @@ function ProcessTrans(data,callback){
               DropMeters.UpdateOnlineDropMeters(data,function(err,results) {
                 if (err) {
                     console.log(err);
-                    callback(err,null);
+                    return callback(err,null);
                 } else {
                     //console.log('donline drop meters updated');
-                    callback(null,results);
+                    return callback(null,results);
                 }
 
               });
@@ -184,8 +194,6 @@ function ProcessTrans(data,callback){
 
  
          if(data.operation ==='insert'){
-
-
                  atm.WriteAtmTrans(data,function(err,results) {
                  
                  if (err) {
@@ -195,11 +203,11 @@ function ProcessTrans(data,callback){
                     });
 
                     data = null;
-                 	callback(err,null);
+                 	return callback(err,null);
                  } else {
                  	 //console.log('atm trans written');
                      data = null;
-                 	 callback(null,results);
+                 	 return callback(null,results);
                  }
              });
              
@@ -215,11 +223,11 @@ function ProcessTrans(data,callback){
                     });
 
                     data = null;
-                    callback(err,null);
+                    return callback(err,null);
                  } else {
                      //console.log('UpdateAtmTrans written');
                      data = null;
-                     callback(null,results);
+                     return callback(null,results);
                  }
              });
 
@@ -236,11 +244,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-             	callback(err,null);
+             	return callback(err,null);
              } else {
              	 //console.log('WriteOnlineMeterSnapshot written');
                  data = null;
-             	 callback(null,results);
+             	 return callback(null,results);
              }
 
 
@@ -257,11 +265,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
              } else {
                  //console.log('UpdateDoorSwitchMeters written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
              }
  
 
@@ -280,11 +288,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
              } else {
                  //console.log('WriteKioskTrans written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
              }
 
          });
@@ -299,11 +307,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
              } else {
                  //console.log('CompleteCurrentTrans written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
              }
 
          });
@@ -320,11 +328,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
              } else {
                  //console.log('SetPendingTransToComplete written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
              }
 
          });
@@ -343,12 +351,12 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
                  //console.log('WriteUnitTransDetail written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
             }
 
@@ -369,12 +377,12 @@ function ProcessTrans(data,callback){
                     });
 
                     data = null;
-                    callback(err,null);
+                    return callback(err,null);
 
                 } else {
                    //  console.log('UpdateKioskUnit written');
                      data = null;
-                     callback(null,results);
+                     return callback(null,results);
 
                 }
 
@@ -390,12 +398,12 @@ function ProcessTrans(data,callback){
                     });
 
                     data = null;
-                    callback(err,null);
+                    return callback(err,null);
 
                 } else {
                      //console.log('UpdateAppVersion written');
                      data = null;
-                     callback(null,results);
+                     return callback(null,results);
 
                 }
 
@@ -413,12 +421,12 @@ function ProcessTrans(data,callback){
                     });
 
                     data = null;
-                    callback(err,null);
+                    return callback(err,null);
 
                 } else {
                      //console.log('UpdateCreditCardOption written');
                      data = null;
-                     callback(null,results);
+                     return callback(null,results);
 
                 }
 
@@ -435,12 +443,12 @@ function ProcessTrans(data,callback){
                     });
 
                     data = null;
-                    callback(err,null);
+                    return callback(err,null);
 
                 } else {
                      //console.log('UpdateSession written');
                      data = null;
-                     callback(null,results);
+                     return callback(null,results);
 
                 }
            
@@ -455,11 +463,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
              data = null;
-             callback(null,results);
+             return callback(null,results);
 
             }
 
@@ -473,11 +481,11 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
              data = null;
-             callback(null,results);
+             return callback(null,results);
 
             }
 
@@ -498,12 +506,12 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
                  //console.log('DeleteUnitDenomConfig written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
             }
 
@@ -522,12 +530,12 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
                  //console.log('UpdateDenomConfig written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
             }
 
@@ -550,12 +558,12 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
                  //console.log('InsertUnitDevice written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
             }
 
@@ -573,12 +581,12 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
                  //console.log('UpdateUnitDevice written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
             }
 
@@ -597,12 +605,12 @@ function ProcessTrans(data,callback){
                 });
 
                 data = null;
-                callback(err,null);
+                return callback(err,null);
 
             } else {
                  //console.log('DeleteUnitDevice written');
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
             }
 
@@ -620,11 +628,11 @@ function ProcessTrans(data,callback){
             if (err) {
                 data = null;
                 console.log('UpdateLTDMeters error: ' + err);
-                callback(err,null);
+                return callback(err,null);
             } else {
                 data = null;
-                console.log('UdpateLTDMeters written');
-                callback(null,results);
+                //console.log('UdpateLTDMeters written');
+                return callback(null,results);
             }
         });
    } else if (data.table === 'sc_billbreaks') {
@@ -641,13 +649,13 @@ function ProcessTrans(data,callback){
 
                   });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
                 } else {
 
                   // console.log('AddBillbreakConfig written');
                    data = null;
-                   callback(null,results);
+                   return callback(null,results);
               }
 
             });
@@ -663,13 +671,13 @@ function ProcessTrans(data,callback){
 
                   });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
                 } else {
 
                    //console.log('UpdateBillbreakConfig written');
                    data = null;
-                   callback(null,results);
+                   return callback(null,results);
               }
 
             });
@@ -686,13 +694,13 @@ function ProcessTrans(data,callback){
 
                   });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
                 } else {
 
                    //console.log('DeleteBillbreakConfig written');
                    data = null;
-                   callback(null,results);
+                   return callback(null,results);
               }
 
             });
@@ -714,12 +722,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropDetails written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
 
 
             }
@@ -740,12 +748,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropMeters written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
                 
 
             }
@@ -768,12 +776,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropMeters written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
                 
 
             }
@@ -791,12 +799,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropMeters written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
                 
 
             }
@@ -818,12 +826,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropMeters written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
                 
 
             }
@@ -841,12 +849,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropMeters written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
                 
 
             }
@@ -868,12 +876,12 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                //console.log('WriteDropMeters written');
                data = null;
-               callback(null,results);
+               return callback(null,results);
                 
 
             }
@@ -891,11 +899,11 @@ function ProcessTrans(data,callback){
 
            });
             data = null;
-            callback(err,null);
+            return callback(err,null);
 
         } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
         }
 
@@ -911,11 +919,11 @@ function ProcessTrans(data,callback){
 
            });
             data = null;
-            callback(err,null);
+            return callback(err,null);
 
         } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
         }
 
@@ -932,11 +940,11 @@ function ProcessTrans(data,callback){
 
            });
             data = null;
-            callback(err,null);
+            return callback(err,null);
 
         } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
         }
 
@@ -951,11 +959,11 @@ function ProcessTrans(data,callback){
 
                });
              data = null;
-             callback(err,null);
+             return callback(err,null);
 
               } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
               }
           });
@@ -971,11 +979,11 @@ function ProcessTrans(data,callback){
 
                });
              data = null;
-             callback(err,null);
+             return callback(err,null);
 
               } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
               }
 
@@ -992,11 +1000,11 @@ function ProcessTrans(data,callback){
 
                });
              data = null;
-             callback(err,null);
+             return callback(err,null);
 
               } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
               }
 
@@ -1017,11 +1025,11 @@ function ProcessTrans(data,callback){
 
                  });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
               } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
               }
 
@@ -1038,11 +1046,11 @@ function ProcessTrans(data,callback){
 
                  });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
               } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
               
 
               }
@@ -1062,12 +1070,12 @@ function ProcessTrans(data,callback){
 
                  });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
               }
               else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
               }
 
@@ -1084,11 +1092,11 @@ function ProcessTrans(data,callback){
 
                  });
                  data = null;
-                 callback(err,null);
+                 return callback(err,null);
 
               } else {
                  data = null;
-                 callback(null,results);
+                 return callback(null,results);
 
               }
 
@@ -1109,11 +1117,11 @@ function ProcessTrans(data,callback){
 
                });
                 data = null;
-                callback(err,null);
+                return callback(err,null);
   
             } else {
                data = null;
-               callback(null,results);
+               return callback(null,results);
 
            }
 
@@ -1125,7 +1133,7 @@ function ProcessTrans(data,callback){
     } else {  //unknown table, need to respond anyway so the client doesn't keep sending
         data = null;
         console.log('***In catch all*******');
-        callback(null,'OK');
+        return callback(null,'OK');
     }
 }
- exports.ProcessTrans = ProcessTrans;
+exports.ProcessTrans = ProcessTrans;

@@ -18,13 +18,13 @@ function CheckMultiGameConfig(connection,data,callback) {
     var request = new Request(sql,function(err,rowCount) {
     	if (err) {
             sql = null;
-            delete request;
+            request = null;
             errMsg = 'CheckMultiGameConfig error: '  + err;
-    		callback(errMsg,null);
+    		    return callback(errMsg,null);
     	} else {
              sql = null;
-             delete request;
-    		callback(null,records);
+             request = null;
+    		return  callback(null,records);
     	}
 
     });          
@@ -65,15 +65,16 @@ function WriteMultiGameConfig(data,callback){
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
     	if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
     	} else {
             connection = results;
             CheckMultiGameConfig(connection,data,function(err,rowCount) {
                 if( err ) {
-                   callback(err,null) ;
+                   connection.close(); 
+                   connection = null;
+                   return callback(err,null) ;
                 } else {
-                  console.log('***rowcount = : ' + rowCount);
                    if (rowCount < 1) {
                        sql = 'insert into sc_multigameconfig (operatorId,machineNumber,multiTypeId,multiTypeDesc,payTableId,' +
                              'parPct,maxBet,denom,gameEnabled,status,updatedBy,updatedFrom,updated,multiTypeRecId,propid)values(@oper,@mach,@type,' +
@@ -85,17 +86,18 @@ function WriteMultiGameConfig(data,callback){
                                 connection.close();
                                 connection = null;
                                 sql = null;
-                                delete request;
+                                request = null;
                                 delete updated;
-                                callback(errMsg,null);
+                                return callback(errMsg,null);
 
                             } else {
                                  connection.close();
                                  connection = null;
                                  sql = null;
-                                 delete request;
+                                 request = null;
                                  delete updated;
-                                 callback(null,rowCount);
+                                 results = null;
+                                 callback(null,'ok');
 
                             }
                         });
@@ -153,14 +155,13 @@ function CheckMultiGameRecord(connection,data,callback) {
     var request = new Request(sql,function(err,rowCount) {
         if (err) {
             sql = null;
-            delete request;
+            request = null;
             errMsg = 'CheckMultiGameRecord error: '  + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
         } else {
              sql = null;
-             delete request;
-             console.log('CheckMultigameRecord rowcount = ' + rowCount + ' mach = ' + data.mach + ' gamenumber = ' + data.gamenumber + ' propid = ' + data.propid);
-            callback(null,records);
+             request = null;
+             return callback(null,records);
         }
 
     });          
@@ -202,14 +203,15 @@ function WriteMultiGameRecord(data,callback){
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
             connection = results;
             CheckMultiGameRecord(connection,data,function(err,rowCount) {
                 if (err) {
                     connection.close();
-                    callback(err,null);
+                    connection = null;
+                    return callback(err,null);
                 } else {
                     console.log('rowcount = ' + rowCount + ' mach = ' + data.mach + ' gamenumber = ' + data.gamenumber + ' recid = ' + data.recid);
                     if (rowCount > 0 ) {
@@ -231,17 +233,18 @@ function WriteMultiGameRecord(data,callback){
                             connection.close();
                             connection = null;
                             sql = null;
-                            delete request;
+                            request = null;
                             delete updated;
-                            callback(errMsg,null);
+                            return callback(errMsg,null);
 
                         } else {
                            connection.close();
                            connection = null;
                            sql = null;
-                           delete request;
+                           request = null;
                            delete updated;
-                           callback(null,results);
+                           results = null;
+                           callback(null,'ok');
 
                         }
                     });                    

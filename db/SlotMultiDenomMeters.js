@@ -15,13 +15,13 @@ function CheckDenomRecord(connection,data,callback) {
     var request = new Request(sql,function(err,rowCount) {
         if (err) {
             sql = null;
-            delete request;
+            request = null;
             errMsg = 'CheckMultiDenomRecord error: '  + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
         } else {
              sql = null;
-             delete request;
-            callback(null,records);
+             request = null;
+            return callback(null,records);
         }
 
     });          
@@ -57,14 +57,15 @@ function WriteDenomRecord(data,callback){
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
         if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
 
         } else {
             connection = results;
             CheckDenomRecord(connection,data,function(err,rowCount) {
                 if (err) {
                     connection.close();
-                    callback(err,null);
+                    connection = null;
+                    return callback(err,null);
                 } else {
                     if (rowCount > 0 ) {
                         sql = 'update db_denomMeters set coinin = @cin,coinout = @cout,jackpot = @jpot,gamesplayed = @games,' +
@@ -83,17 +84,18 @@ function WriteDenomRecord(data,callback){
                             connection.close();
                             connection = null;
                             sql = null;
-                            delete request;
+                            request = null;
                             delete updated;
-                            callback(errMsg,null);
+                            return callback(errMsg,null);
 
                         } else {
                            connection.close();
                            connection = null;
                            sql = null;
-                           delete request;
+                           request = null;
                            delete updated;
-                           callback(null,results);
+                           results = null;
+                           callback(null,'ok');
 
                         }
                     });                    

@@ -20,7 +20,7 @@ function WriteKioskEvents(data,callback) {
 
          if (err) {
             errMsg = 'GetDbConnection error: ' + err;
-         	callback(errMsg,null);
+         	return callback(errMsg,null);
          } else {
 
             connection = results;
@@ -35,17 +35,18 @@ function WriteKioskEvents(data,callback) {
         	    connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-        	    callback(errMsg,null);
+        	    return callback(errMsg,null);
         	
             } else {
         	    connection.close();
                 connection = null;
                 sql = null;
-                delete request;
+                request = null;
                 delete updated;
-        	    callback(null,connection);
+                rowCount = null;
+        	    return callback(null,'ok');
         	
             }
 

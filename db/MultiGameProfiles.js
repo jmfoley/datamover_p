@@ -14,7 +14,7 @@ exports.UpdateMultiGameProfileDetail = function(data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
          if(err){
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
          } else {
             connection = results;
 
@@ -31,14 +31,15 @@ exports.UpdateMultiGameProfileDetail = function(data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
                 } else {
                      connection.close();
                      connection = null;
                      sql = null;
-                     delete request;
-                     callback(null,results);
+                     request = null;
+                     results = null;
+                     callback(null,'ok');
                 }
 
             });
@@ -77,7 +78,7 @@ exports.SaveMultiGameProfileDetail = function(data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
          if(err){
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
          } else {
          	connection = results;
              sql = 'insert into sc_multigameprofiledetail(operatorId,recId,gameNumber,gameDesc,parPct,maxBet,denom,updated, ' +
@@ -91,14 +92,15 @@ exports.SaveMultiGameProfileDetail = function(data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
                 } else {
                      connection.close();
                      connection = null;
                      sql = null;
                      delete request;
-                     callback(null,results);
+                     results = null;
+                     return callback(null,results);
                 }
 
             });
@@ -133,7 +135,7 @@ exports.SaveMultiGameProfile = function(data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
          if(err){
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
          } else {
          	connection = results;
              sql = 'insert into sc_multigameprofile(operatorId,recId,manufId,profileDesc,updated)values(@oper,@recid, ' +
@@ -146,14 +148,15 @@ exports.SaveMultiGameProfile = function(data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
-                    callback(errMsg,null);
+                    request = null;
+                    return callback(errMsg,null);
                 } else {
                      connection.close();
                      connection = null;
                      sql = null;
-                     delete request;
-                     callback(null,results);
+                     request = null;
+                     results = null;
+                     return callback(null,'ok');
                 }
 
             });
@@ -181,7 +184,7 @@ exports.UpdateMachineProfile = function( data,callback) {
     dbConnect.GetDbConnection(data.operatorid,function(err,results) {
          if(err){
             errMsg = 'GetDbConnection error: ' + err;
-            callback(errMsg,null);
+            return callback(errMsg,null);
          } else {
          	connection = results;
          	if(data.operation === 'insert') {
@@ -201,14 +204,15 @@ exports.UpdateMachineProfile = function( data,callback) {
                     connection.close();
                     connection = null;
                     sql = null;
-                    delete request;
+                    request = null;
                     callback(errMsg,null);
                 } else {
                      connection.close();
                      connection = null;
                      sql = null;
-                     delete request;
-                     callback(null,results);
+                     request = null;
+                     results = null;
+                     callback(null,'ok');
                 }
 
             });

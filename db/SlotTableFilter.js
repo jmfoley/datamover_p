@@ -25,11 +25,11 @@ function ProcessTrans(data,callback){
           });
 
           data = null;
-  		    callback(err,null);
+  		    return callback(err,null);
   	    } else {
   		    //console.log('Event written');
           data = null;
-  		    callback(null,results);
+  		    return callback(null,results);
   	    }
 
       });
@@ -67,11 +67,11 @@ function ProcessTrans(data,callback){
         });
 
         data = null;
-		    callback(err,null);
+		    return callback(err,null);
 	    } else {
 		    //console.log('Event written');
         data = null;
-		    callback(null,results);
+		    return callback(null,results);
 	    }
 
 
@@ -87,11 +87,11 @@ function ProcessTrans(data,callback){
         });
 
         data = null;
-        callback(err,null);
+        return callback(err,null);
       } else {
         //console.log('Event written');
         data = null;
-        callback(null,results);
+        return callback(null,results);
       }
 
 
@@ -107,11 +107,11 @@ function ProcessTrans(data,callback){
         });
 
         data = null;
-        callback(err,null);
+        return callback(err,null);
       } else {
         //console.log('Event written');
         data = null;
-        callback(null,results);
+        return callback(null,results);
       }
 
 
@@ -127,11 +127,11 @@ function ProcessTrans(data,callback){
         });
 
         data = null;
-        callback(err,null);
+        return callback(err,null);
       } else {
         //console.log('Event written');
         data = null;
-        callback(null,results);
+        return callback(null,results);
       }
 
 
@@ -149,11 +149,11 @@ function ProcessTrans(data,callback){
         });
 
         data = null;
-        callback(err,null);
+        return callback(err,null);
       } else {
         //console.log('Event written');
         data = null;
-        callback(null,results);
+        return callback(null,results);
       }
 
 
@@ -169,11 +169,11 @@ function ProcessTrans(data,callback){
           });
 
           data = null;
-          callback(err,null);
+          return callback(err,null);
         } else {
           //console.log('Event written');
           data = null;
-          callback(null,results);
+          return callback(null,results);
         }
 
       });
@@ -187,11 +187,11 @@ function ProcessTrans(data,callback){
           });
 
           data = null;
-          callback(err,null);
+          return callback(err,null);
         } else {
           //console.log('Event written');
           data = null;
-          callback(null,results);
+          return callback(null,results);
         }
 
 
@@ -207,11 +207,11 @@ function ProcessTrans(data,callback){
           });
 
           data = null;
-          callback(err,null);
+          return callback(err,null);
         } else {
           //console.log('Event written');
           data = null;
-          callback(null,results);
+          return callback(null,results);
         }
 
 
@@ -226,11 +226,11 @@ function ProcessTrans(data,callback){
           });
 
           data = null;
-          callback(err,null);
+          return callback(err,null);
         } else {
           //console.log('Event written');
           data = null;
-          callback(null,results);
+          return callback(null,results);
         }
          
         });
@@ -265,11 +265,11 @@ function ProcessTrans(data,callback){
           });
 
           data = null;
-          callback(err,null);
+          return callback(err,null);
         } else {
           //console.log('Event written');
           data = null;
-          callback(null,results);
+          return callback(null,results);
         }
         
        });
@@ -278,7 +278,7 @@ function ProcessTrans(data,callback){
  } else {
       data = null;
       console.log('***In slots catch all*******');
-      callback(null,'OK');
+      return callback(null,'OK');
 
  }
 }exports.ProcessTrans = ProcessTrans;
